@@ -1,6 +1,17 @@
 body {
     font-family: Courier, sans-serif;
-    background-color:	#696969;
+    background-color:	#fff7e8;
     font-weight: bold;
     text-align: center;
   }
+  
+.grades{
+
+  }
+ 
+ .grades table{
+	border-collapse: collapse;
+	border: 1px solid black;
+	background-color:#c1e2ff;
+	margin-left:46%
+ }
