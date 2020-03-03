@@ -37,8 +37,23 @@
 					{% endfor %}
 					</table>
 				</div>
-			{%endif%}
-
+            {%endif%}
+            
+            {%if (timetableDict is defined) and timetableDict %}
+                <div class="timetable">
+                    <br>
+                    <table border="1">
+                        <th> <b>Day</b> </th>
+                        <th> <b>Schedule</b> </th>
+                        {% for key, value in timetableDict.items() %}
+                            <tr>
+                                <td> {{ key }} </td>
+                                <td> {{ value }} </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {%endif%}
         </p>
     </form>
 </body>
