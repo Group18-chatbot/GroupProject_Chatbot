@@ -179,6 +179,7 @@ input[type=text]:placeholder {
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
   }
+<<<<<<< HEAD
   100% {
     opacity: 1;
     -webkit-transform: none;
@@ -263,3 +264,19 @@ input[type=text]:placeholder {
 }
 
 </style>
+=======
+ 
+ .grades table{
+	border-collapse: collapse;
+	border: 1px solid black;
+	background-color:#c1e2ff;
+	margin-left:46%
+ }
+
+ .timetable table{
+    border-collapse: collapse;
+	border: 1px solid black;
+	background-color:#c1e2ff;
+	margin-left:46%
+ }
+>>>>>>> 9d025230acb26502702be8c88bcf06faa82aad9a
