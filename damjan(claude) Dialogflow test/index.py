@@ -53,3 +53,8 @@ def send_query():
             return render_template('index.html', response_text=response_text, userInput=userInput, form=form, gradesDict=gradesDict)
     except:
         return render_template('index.html', form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
