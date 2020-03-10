@@ -29,17 +29,39 @@ def detect_intent_texts(project_id, session_id, text, language_code):
         return response.query_result.fulfillment_text
 
 def gradeQuery(response_text):
-	response_text_split = response_text.split()
-	print(response_text_split)
-	gradesDict= {}
-	if "grades" in response_text:
-		#display grades from database for now going to use a local text file
-		f = open("grades.txt", "r")
-		for x in f:
-			key = x.split()[0]
-			gradesDict[key] = x.split()[1]
-		print(gradesDict)	
-	return gradesDict
+    response_text_split = response_text.split()
+    print(response_text_split)
+    gradesDict= {}
+    if "grades" in response_text:
+        #display grades from database for now going to use a local text file
+        f = open("grades.txt", "r")
+        for x in f:
+            key = x.split()[0]
+            gradesDict[key] = x.split()[1]
+        print(gradesDict)
+    return gradesDict
+
+def timetableQuery(response_text):
+    #Damjan prototype
+    #testing query for timetable
+    response_text_split = response_text.split()
+    timetableDict= {}
+    if response_text_split[5] == 'month' and response_text_split[2] == 'timetable':
+        print('example table for month...')
+        f = open("timetable.txt", "r")
+        for x in f:
+            key = x.split()[0]
+            timetableDict[key] = x.split()[1]
+        print(timetableDict)
+    elif response_text_split[5] == 'week' and response_text_split[2] == 'timetable':
+        print('example table for week...')
+        f = open("timetable.txt", "r")
+        for x in f:
+            key = x.split()[0]
+            timetableDict[key] = x.split()[1]
+        print(timetableDict)
+    return timetableDict
+
 
 #@app.route("/")
 @app.route('/query', methods=['GET', 'POST'])
@@ -53,7 +75,8 @@ def send_query():
             userInput = "Student:  " + userInput
             response_text = "Claude:  " + fulfillment_text
             gradesDict = gradeQuery(response_text)
-            return render_template('index.html', response_text=response_text, userInput=userInput, form=form, gradesDict=gradesDict)
+            timetableDict = timetableQuery(response_text)
+            return render_template('index.html', response_text=response_text, userInput=userInput, form=form, gradesDict=gradesDict, timetableDict = timetableDict)
     except:
         return render_template('index.html', form=form)
 
