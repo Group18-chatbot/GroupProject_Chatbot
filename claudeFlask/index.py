@@ -31,7 +31,6 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 def gradeQuery(response_text):
     response_text_split = response_text.split()
     print(response_text_split)
-    gradesDict= {}
     if "grades" in response_text:
         #display grades from database for now going to use a local text file
         user_id = current_user.id
@@ -39,7 +38,10 @@ def gradeQuery(response_text):
         grades=Grades.query.filter_by(id=user_id)
         # to display
         # for grade in grades:
-        # print(grade)               
+        # print(grade)
+
+        for grade in grades:
+                print(grade)
         return grades
     else:
             return
@@ -88,11 +90,12 @@ def send_query():
                 return render_template('index.html', form=form)
         else:
                 flash("Please Login to use the chatbot.")
-                return redirect("/register")
+                return redirect("/login")
         
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    logout_user()
     form = RegistrationForm()
     if form.validate_on_submit():
         user = Users(username=form.username.data,email=form.email.data,password=form.password.data)
@@ -108,6 +111,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated == False:
         print(current_user)
         form = LoginForm()
         if form.validate_on_submit():
@@ -118,6 +122,9 @@ def login():
                         return redirect("query") #check what url should be here
                 flash("Invalid username or password")
         return render_template('login.html', form=form)
+    else:
+        form = TextBox()
+        return redirect("query")
 
 @app.route("/logout")
 def logout():

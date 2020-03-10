@@ -23,25 +23,33 @@
             {{ form.submit() }}
         </div>
         <p>
-            {{userInput}}<br>
+            {{userInput}}
+			<br>
             {{response_text}}
 			
 			{%if (grades is defined) and grades %}
-			    <div class="grades">
-				<br>
-				<table border="1">
-					<th> <b>Module Code</b> </th>
-					<th> <b>Module Name</b> </th>
-					<th> <b>Grade</b> </th>
-					{% for grade in grades %}
-					   <tr>
-							<td> {{ grade.ModuleCode }} </td>
-							<td> {{ grade.ModuleName }} </td>
-							<td> {{ grade.GradePercentage }} </td>
-					   </tr>
-					{% endfor %}
-					</table>
-				</div>
+				{%if grades.count() != 0%}
+					<div class="grades">
+					<br>
+					<table border="1">
+						<th> <b>Module Code</b> </th>
+						<th> <b>Module Name</b> </th>
+						<th> <b>Grade</b> </th>
+						{% for grade in grades %}
+						
+							   <tr>
+									<td> {{ grade.ModuleCode }} </td>
+									<td> {{ grade.ModuleName }} </td>
+									<td> {{ grade.GradePercentage }} </td>
+							   </tr>
+						{% endfor %}
+						</table>
+					</div>
+				{%else%}
+					</br>
+					</br>
+					<b>Grades have not been added for this account</b>
+				{%endif%}
             {%endif%}
             
             {%if (timetableDict is defined) and timetableDict %}
