@@ -67,21 +67,26 @@ def timetableQuery(response_text):
 #@app.route("/")
 @app.route('/query', methods=['GET', 'POST'])
 def send_query():
-    form = TextBox()
-    try:
-        if len(form.query.data)>0:
-            userInput = form.query.data
-            project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
-            fulfillment_text = detect_intent_texts(project_id, "unique", userInput, 'en')
-            userInput = "Student:  " + userInput
-            response_text = "Claude:  " + fulfillment_text
-            grades = gradeQuery(response_text)
-            timetableDict = timetableQuery(response_text)
+        if current_user.is_authenticated:
+            form = TextBox()
+            try:
+                if len(form.query.data)>0:
+                    userInput = form.query.data
+                    project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
+                    fulfillment_text = detect_intent_texts(project_id, "unique", userInput, 'en')
+                    userInput = "Student:  " + userInput
+                    response_text = "Claude:  " + fulfillment_text
+                    grades = gradeQuery(response_text)
+                    timetableDict = timetableQuery(response_text)
 
-                
-            return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict)
-    except:
-        return render_template('index.html', form=form)
+                        
+                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict)
+            except:
+                return render_template('index.html', form=form)
+        else:
+                flash("Please Login to use the chatbot.")
+                return redirect("/register")
+        
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -100,6 +105,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+        print(current_user)
         form = LoginForm()
         if form.validate_on_submit():
                 user = Users.query.filter_by(email=form.email.data).first()
@@ -108,14 +114,14 @@ def login():
                         flash("You are now logged in")
                         return redirect("query") #check what url should be here
                 flash("Invalid username or password")
-        return render_template('login.html', title="Login", form=form)
+        return render_template('login.html', form=form)
 
 @app.route("/logout")
 def logout():
         logout_user()
         session.clear() #do we have sessions that need to be cleared???
         flash("You have been logged out")
-        return redirect(url_for("home"), title="Home") ##where home should be pre login
+        return redirect(url_for("login")) ##where home should be pre login
 
 @app.route('/')
 @app.route('/home')
