@@ -32,6 +32,10 @@ h2 {
 
 /* STRUCTURE */
 
+.logout{
+	float:right;
+}
+
 .wrapper {
   display: flex;
   align-items: center;

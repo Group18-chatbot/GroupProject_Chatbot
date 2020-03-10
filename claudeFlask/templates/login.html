@@ -25,6 +25,17 @@
 
     <!-- Login Form -->
 
+<div>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li><span class="flash-failure">{{ message }}</span></li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+  {% endwith %}
+</div>
 
 <form method="POST" action="">
   {{ form.hidden_tag() }}
