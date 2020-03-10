@@ -40,7 +40,9 @@ def gradeQuery(response_text):
         # to display
         # for grade in grades:
         # print(grade)
-    return grades
+        print(grades)                
+        return grades
+
 
 def timetableQuery(response_text):
     #Damjan prototype
@@ -79,7 +81,6 @@ def send_query():
                     grades = gradeQuery(response_text)
                     timetableDict = timetableQuery(response_text)
 
-                        
                     return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict)
             except:
                 return render_template('index.html', form=form)
