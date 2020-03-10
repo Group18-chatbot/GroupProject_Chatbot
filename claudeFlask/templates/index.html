@@ -23,16 +23,18 @@
             {{userInput}}<br>
             {{response_text}}
 			
-			{%if (gradesDict is defined) and gradesDict %}
+			{%if (grades is defined) and grades %}
 			    <div class="grades">
 				<br>
 				<table border="1">
-					<th> <b>Subject</b> </th>
-					<th> <b>Results</b> </th>
-					{% for key, value in gradesDict.items() %}
+					<th> <b>Module Code</b> </th>
+					<th> <b>Module Name</b> </th>
+					<th> <b>Grade</b> </th>
+					{% for grade in grades %}
 					   <tr>
-							<td> {{ key }} </td>
-							<td> {{ value }} </td>
+							<td> {{ grade.ModuleCode }} </td>
+							<td> {{ grade.ModuleName }} </td>
+							<td> {{ grade.GradePercentage }} </td>
 					   </tr>
 					{% endfor %}
 					</table>

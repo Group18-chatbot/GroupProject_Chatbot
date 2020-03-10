@@ -1,16 +1,15 @@
 from flask import Flask, request, jsonify, render_template, url_for, redirect, flash, session
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import login_user, current_user, logout_user, login_required
 import os
 import dialogflow
 import requests
 import json
 import pusher
-from queries import TextBox
-#from claudeFlask import templates
-from templates import *
-from forms import *
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'a6295f93be3b219d7fe9eaccdb60bbb3ff7f29b09ab2507e'
+from claudeFlask import app,db
+from claudeFlask.models import *
+from claudeFlask.queries import TextBox
+from claudeFlask.forms import *
 
 if __name__ == "__main__":
 	app.run()
@@ -28,18 +27,20 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
         return response.query_result.fulfillment_text
 
+
 def gradeQuery(response_text):
     response_text_split = response_text.split()
     print(response_text_split)
     gradesDict= {}
     if "grades" in response_text:
         #display grades from database for now going to use a local text file
-        f = open("grades.txt", "r")
-        for x in f:
-            key = x.split()[0]
-            gradesDict[key] = x.split()[1]
-        print(gradesDict)
-    return gradesDict
+        user_id = current_user.id
+        #contains grades of the current user
+        grades=Grades.query.filter_by(id=user_id)
+        # to display
+        # for grade in grades:
+        # print(grade)
+    return grades
 
 def timetableQuery(response_text):
     #Damjan prototype
@@ -74,21 +75,38 @@ def send_query():
             fulfillment_text = detect_intent_texts(project_id, "unique", userInput, 'en')
             userInput = "Student:  " + userInput
             response_text = "Claude:  " + fulfillment_text
-            gradesDict = gradeQuery(response_text)
+            grades = gradeQuery(response_text)
             timetableDict = timetableQuery(response_text)
-            return render_template('index.html', response_text=response_text, userInput=userInput, form=form, gradesDict=gradesDict, timetableDict = timetableDict)
+
+                
+            return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict)
     except:
         return render_template('index.html', form=form)
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = Users(username=form.username.data,email=form.email.data,password=form.password.data)
+
+
+        db.session.add(user)
+        db.session.commit()
+        # Create a row in the cart database and wishlist database for 1 user
+
+        return redirect("login")
+    return render_template("register.html", title="Register", form=form)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
         form = LoginForm()
         if form.validate_on_submit():
-                user = User.query.filter_by(email=form.email.data).first()
+                user = Users.query.filter_by(email=form.email.data).first()
                 if user is not None and user.verify_password(form.password.data):
                         login_user(user)
                         flash("You are now logged in")
-                        return redirect(url_for("home")) #check what url should be here
+                        return redirect("query") #check what url should be here
                 flash("Invalid username or password")
         return render_template('login.html', title="Login", form=form)
 
