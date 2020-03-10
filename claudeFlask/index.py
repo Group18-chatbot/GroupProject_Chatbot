@@ -39,9 +39,10 @@ def gradeQuery(response_text):
         grades=Grades.query.filter_by(id=user_id)
         # to display
         # for grade in grades:
-        # print(grade)
-        print(grades)                
+        # print(grade)               
         return grades
+    else:
+            return
 
 
 def timetableQuery(response_text):
@@ -49,21 +50,22 @@ def timetableQuery(response_text):
     #testing query for timetable
     response_text_split = response_text.split()
     timetableDict= {}
-    if response_text_split[5] == 'month' and response_text_split[2] == 'timetable':
+    if "month" in response_text_split and "timetable" in response_text_split:
         print('example table for month...')
         f = open("timetable.txt", "r")
         for x in f:
             key = x.split()[0]
             timetableDict[key] = x.split()[1]
-        print(timetableDict)
-    elif response_text_split[5] == 'week' and response_text_split[2] == 'timetable':
+        return timetableDict
+    elif "week" in response_text_split and "timetable" in response_text_split:
         print('example table for week...')
         f = open("timetable.txt", "r")
         for x in f:
             key = x.split()[0]
             timetableDict[key] = x.split()[1]
-        print(timetableDict)
-    return timetableDict
+        return timetableDict
+    else:
+            return
 
 
 #@app.route("/")
