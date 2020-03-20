@@ -35,3 +35,12 @@ class Grades(db.Model):
     ModuleCode = db.Column(db.String(100),primary_key=True)
     ModuleName = db.Column(db.String(100),nullable=False)
     GradePercentage = db.Column(db.Integer,nullable=False)
+
+
+class Sports(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    Sport = db.Column(db.String(120), nullable=False)
+    Team1 = db.Column(db.String(100), nullable=False)
+    Team2 = db.Column(db.String(100), nullable=False)
+    Score = db.Column(db.String(3), nullable=False)
+
