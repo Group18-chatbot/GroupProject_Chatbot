@@ -1,9 +1,9 @@
-28/09/2019 Mathematics
-28/09/2019 Computing
-28/09/2019 Java
-29/09/2019 Databases
-30/09/2019 Java
-01/10/2019 Mathematics
-01/10/2019 Databases
-02/10/2019 Networks
-02/10/2019 Networks
+28/09/2019 CM2104 Computational Mathematics                          9:00-9:50 South/S/1.32 Lecture
+28/09/2019 CM2207 Introduction to the Theory of Computation          11:10-12:00 T/2.07 Lecture
+28/09/2019 CM2307 Object Orientation, Algorithms and Data Structures 12:10-13:00 North/N/4.07 Lecture
+29/09/2019 CM2102 Database Systems                                   12:10-14:00 Central/C/2.08 Tutorial
+30/09/2019 CM2307 Object Orientation, Algorithms and Data Structures 9:00-9:50 Central/C/2.08 Tutorial
+01/10/2019 CM2104 Computational Mathematics                          10:10-11:00 South/S/1.32 Lecture
+01/10/2019 CM2102 Database Systems                                   11:10-12:00 North/N/4.07 Lecture
+02/10/2019 CM2306 Communication Networks                             9:00-9:50 T/2.07 Lecture
+02/10/2019 CM2306 Communication Networks                             10:00-12:00 Central/C/2.05/2.04 Tutorial

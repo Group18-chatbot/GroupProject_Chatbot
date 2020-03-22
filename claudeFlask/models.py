@@ -35,3 +35,13 @@ class Grades(db.Model):
     ModuleCode = db.Column(db.String(100),primary_key=True)
     ModuleName = db.Column(db.String(100),nullable=False)
     GradePercentage = db.Column(db.Integer,nullable=False)
+
+class Timetable(db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    Date = db.Column(db.String(100), primary_key=True)
+    Time = db.Column(db.String(100), primary_key=True)
+    ModuleCode = db.Column(db.String(100),nullable=False)
+    ModuleName = db.Column(db.String(100),nullable=False)
+    Location = db.Column(db.String(100),nullable=False)
+    Type = db.Column(db.String(50),nullable=False)
+    

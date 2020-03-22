@@ -10,6 +10,7 @@ from claudeFlask import app,db
 from claudeFlask.models import *
 from claudeFlask.queries import TextBox
 from claudeFlask.forms import *
+from datetime import date
 
 if __name__ == "__main__":
 	app.run()
@@ -39,7 +40,6 @@ def gradeQuery(response_text):
         # to display
         # for grade in grades:
         # print(grade)
-
         for grade in grades:
                 print(grade)
         return grades
@@ -51,21 +51,30 @@ def timetableQuery(response_text):
     #Damjan prototype
     #testing query for timetable
     response_text_split = response_text.split()
-    timetableDict= {}
+    today = date.today()
+    D1 = today.strftime("%d/%m/%Y")
     if "month" in response_text_split and "timetable" in response_text_split:
-        print('example table for month...')
-        f = open("timetable.txt", "r")
-        for x in f:
-            key = x.split()[0]
-            timetableDict[key] = x.split()[1]
-        return timetableDict
+        # print('example table for month...')
+        # f = open("timetable.txt", "r")
+        # for x in f:
+        #     key = x.split()[0]
+        #     timetableDict[key] = x.split()[1]
+        user_id = current_user.id
+        print(D1)
+        timetable = Timetable.query.filter_by(id=user_id).filter_by(Date=D1)
+        for item in timetable:
+            if str(item).split()[1] == D1:
+                print(item)
+        return timetable
     elif "week" in response_text_split and "timetable" in response_text_split:
-        print('example table for week...')
-        f = open("timetable.txt", "r")
-        for x in f:
-            key = x.split()[0]
-            timetableDict[key] = x.split()[1]
-        return timetableDict
+        # print('example table for week...')
+        # f = open("timetable.txt", "r")
+        # for x in f:
+        #     key = x.split()[0]
+        #     timetableDict[key] = x.split()[1]
+        user_id = current_user.id
+        timetable = Timetable.query.filter_by(id=user_id)
+        return timetable
     else:
             return
 
@@ -82,9 +91,9 @@ def send_query():
                     userInput = "Student:  " + userInput
                     response_text = "Claude:  " + fulfillment_text
                     grades = gradeQuery(response_text)
-                    timetableDict = timetableQuery(response_text)
+                    timetable = timetableQuery(response_text)
 
-                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict)
+                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable=timetable)
             except:
                 return render_template('index.html', form=form)
 

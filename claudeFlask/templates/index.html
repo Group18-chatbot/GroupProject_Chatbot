@@ -9,9 +9,9 @@
 	<div class="logout">
 		<a href="{{url_for('logout')}}">Logout</a>
 	</div>
-    <p>
+    <h1>
         Claude
-    </p>
+    </h1>
     <form method="POST" action="">
         <div class="">
             {{ form.query }}
@@ -52,20 +52,34 @@
 				{%endif%}
             {%endif%}
             
-            {%if (timetableDict is defined) and timetableDict %}
-                <div class="timetable">
-                    <br>
-                    <table border="1">
-                        <th> <b>Day</b> </th>
-                        <th> <b>Schedule</b> </th>
-                        {% for key, value in timetableDict.items() %}
-                            <tr>
-                                <td> {{ key }} </td>
-                                <td> {{ value }} </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+            {%if (timetable is defined) and timetable %}
+                {%if timetable.count() != 0%}
+                    <div class="timetable">
+                        <br>
+                        <table border="1">
+                            <th> <b>Date</b> </th>
+                            <th> <b>Time</b> </th>
+                            <th> <b>Module Code</b> </th>
+                            <th> <b>Module Name</b> </th>
+                            <th> <b>Location</b> </th>
+                            <th> <b>Type</b> </th>
+                            {% for item in timetable %}
+                                <tr>
+                                    <td> {{ item.Date }} </td>
+                                    <td> {{ item.Time }} </td>
+                                    <td> {{ item.ModuleCode }} </td>
+                                    <td> {{ item.ModuleName }} </td>
+                                    <td> {{ item.Location }} </td>
+                                    <td> {{ item.Type }} </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {%else%}
+                    </br>
+                    </br>
+                    <b>A timetable has not been created for this account</b>
+                {%endif%}
             {%endif%}
         </p>
     </form>
