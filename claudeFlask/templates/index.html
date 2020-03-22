@@ -81,6 +81,29 @@
                     <b>A timetable has not been created for this account</b>
                 {%endif%}
             {%endif%}
+{%if (sports is defined) and sports %}
+                    <div class="sports">
+                    <br>
+                    <table border="1">
+                        <th> <b>Sport</b> </th>
+                        <th> <b>Team1</b> </th>
+                        <th> <b>Team2</b> </th>
+                        <th> <b>Score</b> </th>
+                        {% for sport in sports %}
+                        
+                               <tr>
+                                    <td> {{ sport.Sport }} </td>
+                                    <td> {{ sport.Team1 }} </td>
+                                    <td> {{ sport.Team2 }} </td>
+                                    <td> {{ sport.Score }} </td>
+                               </tr>
+                        {% endfor %}
+                        </table>
+                    </div>
+                {%else%}
+                    </br>
+                    </br>
+            {%endif%}
         </p>
     </form>
 </body>

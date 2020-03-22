@@ -14,7 +14,7 @@ from datetime import date
 
 if __name__ == "__main__":
 	app.run()
-
+ 
 def detect_intent_texts(project_id, session_id, text, language_code):
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
@@ -43,6 +43,20 @@ def gradeQuery(response_text):
         for grade in grades:
                 print(grade)
         return grades
+    else:
+            return
+
+
+def sportQuery(response_text):
+    response_text_split = response_text.split()
+    print(response_text_split)
+    if "sports" in response_text_split:
+        sports=Sports.query.all()
+
+
+        for sport in sports:
+                print(sport)
+        return sports
     else:
             return
 
@@ -92,8 +106,9 @@ def send_query():
                     response_text = "Claude:  " + fulfillment_text
                     grades = gradeQuery(response_text)
                     timetable = timetableQuery(response_text)
+                    sports = sportQuery(response_text)
 
-                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable=timetable)
+                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict, sports=sports)
             except:
                 return render_template('index.html', form=form)
 
