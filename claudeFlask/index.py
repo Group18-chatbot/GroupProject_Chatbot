@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, url_for, redirect, flash, session
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 from flask_login import login_user, current_user, logout_user, login_required
 import os
 import dialogflow
@@ -10,7 +11,7 @@ from claudeFlask import app,db
 from claudeFlask.models import *
 from claudeFlask.queries import TextBox
 from claudeFlask.forms import *
-from datetime import date
+from datetime import date, timedelta
 
 if __name__ == "__main__":
 	app.run()
@@ -49,7 +50,6 @@ def gradeQuery(response_text):
 
 def sportQuery(response_text):
     response_text_split = response_text.split()
-    print(response_text_split)
     if "sports" in response_text_split:
         sports=Sports.query.all()
 
@@ -60,27 +60,34 @@ def sportQuery(response_text):
     else:
             return
 
+def getWeekDate():
+    today = date.today()
+    startDay = today - timedelta(days=today.weekday())
+    addDay = startDay.strftime("%d/%m/%Y")
+    week = []
+    for i in range(7):
+        week.append(addDay)
+        startDay = startDay + timedelta(days=1)
+        addDay = startDay.strftime("%d/%m/%Y")
+    return(week)
+    
 
 def timetableQuery(response_text):
     #Damjan prototype
     #testing query for timetable
     response_text_split = response_text.split()
-    today = date.today()
-    D1 = today.strftime("%d/%m/%Y")
-    if "month" in response_text_split and "timetable" in response_text_split:
+    
+    if "week" in response_text_split and "timetable" in response_text_split:
         # print('example table for month...')
         # f = open("timetable.txt", "r")
         # for x in f:
         #     key = x.split()[0]
         #     timetableDict[key] = x.split()[1]
         user_id = current_user.id
-        print(D1)
-        timetable = Timetable.query.filter_by(id=user_id).filter_by(Date=D1)
-        for item in timetable:
-            if str(item).split()[1] == D1:
-                print(item)
+        week = getWeekDate()
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(week))
         return timetable
-    elif "week" in response_text_split and "timetable" in response_text_split:
+    elif "month" in response_text_split and "timetable" in response_text_split:
         # print('example table for week...')
         # f = open("timetable.txt", "r")
         # for x in f:
@@ -108,7 +115,7 @@ def send_query():
                     timetable = timetableQuery(response_text)
                     sports = sportQuery(response_text)
 
-                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict, sports=sports)
+                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable = timetable, sports=sports)
             except:
                 return render_template('index.html', form=form)
 
