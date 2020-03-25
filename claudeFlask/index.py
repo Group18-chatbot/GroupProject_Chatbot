@@ -70,7 +70,7 @@ def getWeekDate():
         startDay = startDay + timedelta(days=1)
         addDay = startDay.strftime("%d/%m/%Y")
     return(week)
-    
+
 
 def timetableQuery(response_text):
     #Damjan prototype
