@@ -103,6 +103,7 @@ def timetableQuery(response_text):
 #@app.route("/")
 @app.route('/query', methods=['GET', 'POST'])
 def send_query():
+        if current_user.is_authenticated:
             form = TextBox()
             try:
                 if len(form.query.data)>0:
@@ -118,6 +119,9 @@ def send_query():
                     return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable = timetable, sports=sports)
             except:
                 return render_template('index.html', form=form)
+        else:
+            flash("Please login to acces the chatbot")
+            return redirect(url_for('login'))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
