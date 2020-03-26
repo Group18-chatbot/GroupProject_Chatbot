@@ -35,7 +35,7 @@ def gradeQuery(response_text):
         #display grades from database for now going to use a local text file
         user_id = current_user.id
         #contains grades of the current user
-        grades=Grades.query.filter_by(id=user_id)
+        grades=Grades.query.filter_by(userid=user_id)
         # to display
         # for grade in grades:
         # print(grade)
