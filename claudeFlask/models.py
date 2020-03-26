@@ -31,7 +31,7 @@ def load_user(user_id):
 
 
 class Grades(db.Model):
-    id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False,primary_key=True)
     ModuleCode = db.Column(db.String(100),primary_key=True)
     ModuleName = db.Column(db.String(100),nullable=False)
     GradePercentage = db.Column(db.Integer,nullable=False)
