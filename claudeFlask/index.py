@@ -13,7 +13,7 @@ from claudeFlask.forms import *
 
 if __name__ == "__main__":
 	app.run()
-
+ 
 def detect_intent_texts(project_id, session_id, text, language_code):
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
@@ -30,19 +30,28 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
 def gradeQuery(response_text):
     response_text_split = response_text.split()
-    print(response_text_split)
     if "grades" in response_text:
         #display grades from database for now going to use a local text file
         user_id = current_user.id
         #contains grades of the current user
         grades=Grades.query.filter_by(id=user_id)
+        
+
         # to display
         # for grade in grades:
         # print(grade)
 
-        for grade in grades:
-                print(grade)
         return grades
+    else:
+            return
+
+
+def sportQuery(response_text):
+    response_text_split = response_text.split()
+    if "sports" in response_text_split:
+        sports=Sports.query.all()
+
+        return sports
     else:
             return
 
@@ -73,6 +82,7 @@ def timetableQuery(response_text):
 #@app.route("/")
 @app.route('/query', methods=['GET', 'POST'])
 def send_query():
+        if current_user.is_authenticated:
             form = TextBox()
             try:
                 if len(form.query.data)>0:
@@ -83,10 +93,14 @@ def send_query():
                     response_text = "Claude:  " + fulfillment_text
                     grades = gradeQuery(response_text)
                     timetableDict = timetableQuery(response_text)
+                    sports = sportQuery(response_text)
 
-                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict)
+                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetableDict = timetableDict, sports=sports)
             except:
                 return render_template('index.html', form=form)
+        else:
+            flash("Please login to acces the chatbot")
+            return redirect(url_for('login'))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
