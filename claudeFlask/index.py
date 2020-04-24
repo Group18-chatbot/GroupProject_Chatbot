@@ -32,17 +32,16 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
 def gradeQuery(response_text):
     response_text_split = response_text.split()
-    print(response_text_split)
     if "grades" in response_text:
         #display grades from database for now going to use a local text file
         user_id = current_user.id
         #contains grades of the current user
         grades=Grades.query.filter_by(id=user_id)
+        
+
         # to display
         # for grade in grades:
         # print(grade)
-        for grade in grades:
-                print(grade)
         return grades
     else:
             return
@@ -53,9 +52,6 @@ def sportQuery(response_text):
     if "sports" in response_text_split:
         sports=Sports.query.all()
 
-
-        for sport in sports:
-                print(sport)
         return sports
     else:
             return

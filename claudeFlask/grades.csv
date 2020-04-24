@@ -1,4 +1,4 @@
-id,ModuleCode,ModuleName,GradePercentage
+userid,ModuleCode,ModuleName,GradePercentage
 1,CM2102,Database Systems,74
 1,CM2104,Computational Mathematics,79
 1,CM2106,Enhancing your Employability,65
@@ -9,4 +9,23 @@ id,ModuleCode,ModuleName,GradePercentage
 1,CM1205,Architecture and Operating Systems,76
 1,CM1208,Maths for Computer Science,95
 1,CM1210,Object Oriented Java Programming,82
-,,,
+8,CM2102,Database Systems,21
+8,CM2104,Computational Mathematics,90
+8,CM2106,Enhancing your Employability,33
+8,CM1101,Computational Thinking,89
+8,CM1102,Web Applications,78
+8,CM1103,Problem Solving with Python,92
+8,CM1202,Developing Quality Software,69
+8,CM1205,Architecture and Operating Systems,70
+8,CM1208,Maths for Computer Science,88
+8,CM1210,Object Oriented Java Programming,100
+9,CM2102,Database Systems,12
+9,CM2104,Computational Mathematics,76
+9,CM2106,Enhancing your Employability,87
+9,CM1101,Computational Thinking,33
+9,CM1102,Web Applications,54
+9,CM1103,Problem Solving with Python,88
+9,CM1202,Developing Quality Software,3
+9,CM1205,Architecture and Operating Systems,55
+9,CM1208,Maths for Computer Science,77
+9,CM1210,Object Oriented Java Programming,84
