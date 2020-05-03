@@ -10,7 +10,8 @@
 		<a href="{{url_for('logout')}}">Logout</a>
 	</div>
     <h1>
-        Claude
+        <img src="{{url_for('static', filename='logo.png')}}"align="middle"alt="cymro" width="150" height="150" />
+        
     </h1>
     <form method="POST" action="">
         <div class="">
@@ -81,6 +82,35 @@
                     <b>A timetable has not been created for this account</b>
                 {%endif%}
             {%endif%}
+
+            {%if (calendar is defined) and calendar %}
+                {%if calendar.count() != 0%}
+                    <div class="calendar">
+                        <br>
+                        <table border="1">
+                            <th> <b>Date</b> </th>
+                            <th> <b>Time</b> </th>
+                            <th> <b>Reminder</b> </th>
+                            <th> <b>Type</b> </th>
+                            {% for item in calendar %}
+                                <tr>
+                                    <td> {{ item.Date }} </td>
+                                    <td> {{ item.Time }} </td>
+                                    <td> {{ item.Reminder }} </td>
+                                    <td> {{ item.Type }} </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {%else%}
+                    </br>
+                    </br>
+                    <b>A calendar has not been created for this account</b>
+                {%endif%}
+            {%endif%}
+
+
+
 {%if (sports is defined) and sports %}
                     <div class="sports">
                     <br>

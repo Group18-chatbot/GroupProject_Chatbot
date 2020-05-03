@@ -52,3 +52,10 @@ class Sports(db.Model):
     Team1 = db.Column(db.String(100), nullable=False)
     Team2 = db.Column(db.String(100), nullable=False)
     Score = db.Column(db.String(3), nullable=False)
+
+class Calendar(db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    Date = db.Column(db.String(100), primary_key=True)
+    Time = db.Column(db.String(100), primary_key=True)
+    Reminder = db.Column(db.String(100),nullable=False)
+    Type = db.Column(db.String(50),nullable=False)

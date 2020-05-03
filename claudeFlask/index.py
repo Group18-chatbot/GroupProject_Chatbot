@@ -96,6 +96,45 @@ def timetableQuery(response_text):
             return
 
 
+def calendarQuery(response_text):
+    response_text_split = response_text.split()
+    
+    if "week" in response_text_split and "calendar" in response_text_split:
+
+        user_id = current_user.id
+        week = getWeekDate()
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(week))
+        return Calendar
+    elif "month" in response_text_split and "calendar" in response_text_split:
+        user_id = current_user.id
+        calendar = Calendar.query.filter_by(id=user_id)
+        return calendar
+    else:
+            return
+
+def calendar_addQuery(response_text):
+    response_text_split = response_text.split()
+    if "event" in response_text_split:
+        user_id = current_user.id
+        event = Calendar(date="sdf",time="sdf",reminder="sdf",type="sdf")
+        db.session.add(event)
+        db.session.commit()
+        return
+    else:
+        return
+
+def calendar_deleteQuery(response_text):
+    response_text_split = response_text.split()
+    if "delete" in response_text_split:
+        user_id = current_user.id
+        event = Calendar(date="sdf",time="sdf",reminder="sdf",type="sdf")
+        db.session.add(event)
+        db.session.commit()
+        return
+    else:
+        return
+
+
 #@app.route("/")
 @app.route('/query', methods=['GET', 'POST'])
 def send_query():
@@ -107,10 +146,15 @@ def send_query():
                     project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
                     fulfillment_text = detect_intent_texts(project_id, "unique", userInput, 'en')
                     userInput = "Student:  " + userInput
-                    response_text = "Claude:  " + fulfillment_text
+                    response_text = "Cymro:  " + fulfillment_text
                     grades = gradeQuery(response_text)
                     timetable = timetableQuery(response_text)
                     sports = sportQuery(response_text)
+                    calendar = calendarQuery(response_text)
+                    calendar_add = calendar_addQuery(response_text)
+                    calendar_delete = calendar_deleteQuery(response_text)
+
+
 
                     return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable = timetable, sports=sports)
             except:
