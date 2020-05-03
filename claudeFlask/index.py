@@ -80,10 +80,40 @@ def gradeQuery(response_text,userInput):
             return
 
 
-def sportQuery(response_text):
+def sportQuery(response_text, user_Input):
     response_text_split = response_text.split()
+    user_Input_split = (user_Input.upper()).split()
     if "sports" in response_text_split:
         sports=Sports.query.all()
+
+        Sportsquery = []
+        Teamquery1 = []
+        Teamquery2 = []
+
+        for sport in sports:
+
+
+            if (sport.Sport).upper() in user_Input_split:
+                Sportsquery.append(sport.Sport)
+
+            #some modulenames have spaces so need a different approach
+            team1 = sport.Team1
+            team2 = sport.Team2
+            teamName1split = (team1.upper()).split()
+            teamName2split = (team2.upper()).split()
+
+            if all(elem in user_Input_split for elem in teamName1split ) & (team1 not in Teamquery1):
+                Teamquery1.append(sport.Team1)
+
+            if all(elem in user_Input_split for elem in teamName2split ) & (team2 not in Teamquery2):
+                Teamquery2.append(sport.Team2)
+
+
+        sports = Sports.query.filter(( Sports.Sport.in_(Sportsquery))  | (Sports.Team1.in_(Teamquery1) | (Sports.Team2.in_(Teamquery2)) ))
+
+        #if no table querying requested
+        if (len(Sportsquery) == 0) & (len(Teamquery1) == 0) & (len(Teamquery2 ) == 0):
+            sports=Sports.query.all()
 
         return sports
     else:
@@ -209,7 +239,7 @@ def send_query():
                     response_text = "Cymro:  " + fulfillment_text
                     grades = gradeQuery(response_text, userInput)
                     timetable = timetableQuery(response_text)
-                    sports = sportQuery(response_text)
+                    sports = sportQuery(response_text, userInput)
                     calendar = calendarQuery(response_text)
                     calendar_add = calendar_addQuery(response_text)
                     calendar_delete = calendar_deleteQuery(response_text)
