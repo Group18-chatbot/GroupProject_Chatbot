@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, url_for, redirect, flash, session
+from flask import Flask, request, jsonify, render_template, url_for, redirect, flash, session, make_response
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from flask_login import login_user, current_user, logout_user, login_required
@@ -8,11 +8,14 @@ import dialogflow
 import requests
 import json
 import pusher
-from claudeFlask import app,db
+from claudeFlask import app, db
 from claudeFlask.models import *
 from claudeFlask.queries import TextBox
 from claudeFlask.forms import *
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+import mysql.connector
+from claudeFlask.models import db, Calendar
+
 
 if __name__ == "__main__":
 	app.run()
@@ -144,16 +147,37 @@ def calendarQuery(response_text):
     else:
             return
 
+#def calendar_addQuery(response_text):
+#    response_text_split = response_text.split()
+#
+ #   mydb = mysql.connector.connect(
+ #   host="csmysql.cs.cf.ac.uk",
+ #   user="CM2305.group18.1920",
+ #   passwd="Mw2Z4DeYMm62fPG",
+  #  database="CM2305_group18_1920"
+  #  )
+  #  mycursor = mydb.cursor()
+ #   if "event" in response_text_split:
+  #      sql = "INSERT INTO calendar (id, Date, Time, Reminder, Type) VALUES (%s, %s,%s, %s)"
+  #      val = (7,"John", "Highway 21","John", "Highway 21")
+  #      mycursor.execute(sql, val)
+  #      mydb.commit()
+   #     return
+   # else:
+   #     return
+    
+@app.route('/', methods=['GET'])
 def calendar_addQuery(response_text):
     response_text_split = response_text.split()
     if "event" in response_text_split:
         user_id = current_user.id
-        event = Calendar(date="sdf",time="sdf",reminder="sdf",type="sdf")
+        event = Calendar(id=5,date="sdf",time="sdf",reminder="sdf",type="sdf")
         db.session.add(event)
         db.session.commit()
         return
     else:
         return
+
 
 def calendar_deleteQuery(response_text):
     response_text_split = response_text.split()
