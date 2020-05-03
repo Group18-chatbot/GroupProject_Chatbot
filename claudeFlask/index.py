@@ -57,7 +57,6 @@ def gradeQuery(response_text,userInput):
             if grade.ModuleCode.upper() in user_Input_split:
                 ModuleCodequery.append(grade.ModuleCode)
 
-
             #some modulenames have spaces so need a different approach
             ModuleNamesplit = (grade.ModuleName.upper()).split()
             if all(elem in user_Input_split for elem in ModuleNamesplit ):
@@ -68,6 +67,10 @@ def gradeQuery(response_text,userInput):
 
 
         grades = grades.filter(( Grades.ModuleCode.in_(ModuleCodequery))  | (Grades.ModuleName.in_(ModuleNamequery) | (Grades.GradePercentage.in_(moduleGradePercentageQuery)) ))
+
+        #if no table querying requested
+        if (len(ModuleCodequery) == 0) & (len(ModuleNamequery) == 0) & (len(moduleGradePercentageQuery ) == 0):
+            grades=Grades.query.filter_by(id=user_id)
 
         return grades
     else:
