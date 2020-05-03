@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from flask_login import login_user, current_user, logout_user, login_required
 import os
+import re
 import dialogflow
 import requests
 import json
@@ -30,18 +31,44 @@ def detect_intent_texts(project_id, session_id, text, language_code):
         return response.query_result.fulfillment_text
 
 
-def gradeQuery(response_text):
-    response_text_split = response_text.split()
+def gradeQuery(response_text,userInput):
+    print(userInput)
+
+    #make users input a list
+    user_Input_split = (userInput.upper()).split()
+
     if "grades" in response_text:
         #display grades from database for now going to use a local text file
         user_id = current_user.id
+
         #contains grades of the current user
         grades=Grades.query.filter_by(id=user_id)
-        
 
-        # to display
-        # for grade in grades:
-        # print(grade)
+        print(user_Input_split)
+
+
+        #table based querying
+        ModuleCodequery = []
+        ModuleNamequery = []
+        moduleGradePercentageQuery = []
+
+        for grade in grades:
+
+            if grade.ModuleCode.upper() in user_Input_split:
+                ModuleCodequery.append(grade.ModuleCode)
+
+
+            #some modulenames have spaces so need a different approach
+            ModuleNamesplit = (grade.ModuleName.upper()).split()
+            if all(elem in user_Input_split for elem in ModuleNamesplit ):
+                    ModuleNamequery.append(grade.ModuleName)
+
+            if str(grade.GradePercentage) in user_Input_split:
+                    moduleGradePercentageQuery.append(grade.GradePercentage)
+
+
+        grades = grades.filter(( Grades.ModuleCode.in_(ModuleCodequery))  | (Grades.ModuleName.in_(ModuleNamequery) | (Grades.GradePercentage.in_(moduleGradePercentageQuery)) ))
+
         return grades
     else:
             return
@@ -81,6 +108,8 @@ def timetableQuery(response_text):
         #     timetableDict[key] = x.split()[1]
         user_id = current_user.id
         week = getWeekDate()
+        print("s")
+        print(week)
         timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(week))
         return timetable
     elif "month" in response_text_split and "timetable" in response_text_split:
@@ -142,12 +171,16 @@ def send_query():
             form = TextBox()
             try:
                 if len(form.query.data)>0:
+
                     userInput = form.query.data
+                    #remove special characters
+                    userInput = re.sub(r'[^a-zA-Z0-9]', ' ', userInput)
+
                     project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
                     fulfillment_text = detect_intent_texts(project_id, "unique", userInput, 'en')
                     userInput = "Student:  " + userInput
                     response_text = "Cymro:  " + fulfillment_text
-                    grades = gradeQuery(response_text)
+                    grades = gradeQuery(response_text, userInput)
                     timetable = timetableQuery(response_text)
                     sports = sportQuery(response_text)
                     calendar = calendarQuery(response_text)
