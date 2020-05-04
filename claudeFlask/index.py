@@ -115,6 +115,7 @@ def sportQuery(response_text, user_Input):
         if (len(Sportsquery) == 0) & (len(Teamquery1) == 0) & (len(Teamquery2 ) == 0):
             sports=Sports.query.all()
 
+
         return sports
     else:
             return
@@ -163,19 +164,14 @@ def timetableQuery(response_text):
 
 def calendarQuery(response_text):
     response_text_split = response_text.split()
-    
-    if "week" in response_text_split and "calendar" in response_text_split:
-
+    if "event" in response_text_split:
         user_id = current_user.id
-        week = getWeekDate()
-        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(week))
-        return Calendar
-    elif "month" in response_text_split and "calendar" in response_text_split:
-        user_id = current_user.id
-        calendar = Calendar.query.filter_by(id=user_id)
-        return calendar
+        event = Calendar(date="sdf",time="sdf",reminder="sdf",type="sdf")
+        db.session.add(event)
+        db.session.commit()
+        return
     else:
-            return
+        return
 
 #def calendar_addQuery(response_text):
 #    response_text_split = response_text.split()
@@ -196,27 +192,19 @@ def calendarQuery(response_text):
    # else:
    #     return
     
-@app.route('/', methods=['GET'])
-def calendar_addQuery(response_text):
-    response_text_split = response_text.split()
-    if "event" in response_text_split:
-        user_id = current_user.id
-        event = Calendar(id=5,date="sdf",time="sdf",reminder="sdf",type="sdf")
-        db.session.add(event)
-        db.session.commit()
-        return
-    else:
-        return
+
+
+
 
 
 def calendar_deleteQuery(response_text):
     response_text_split = response_text.split()
     if "delete" in response_text_split:
         user_id = current_user.id
-        event = Calendar(date="sdf",time="sdf",reminder="sdf",type="sdf")
+        event = Calendar(date='sdf',time='sdf',reminder='sdf',type='sdf')
         db.session.add(event)
         db.session.commit()
-        return
+        return event
     else:
         return
 
@@ -241,8 +229,7 @@ def send_query():
                     timetable = timetableQuery(response_text)
                     sports = sportQuery(response_text, userInput)
                     calendar = calendarQuery(response_text)
-                    calendar_add = calendar_addQuery(response_text)
-                    calendar_delete = calendar_deleteQuery(response_text)
+
 
 
 
