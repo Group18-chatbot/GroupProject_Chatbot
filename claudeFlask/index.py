@@ -155,7 +155,7 @@ def timetableQuery(response_text, user_Input):
     #Damjan prototype
     #testing query for timetable
     response_text_split = response_text.split()
-    user_Input_split = (user_Input.upper()).split()
+    user_Input_split = user_Input.split()
     
     if "week" in response_text_split and "timetable" in response_text_split and "previous" in response_text_split:
         user_id = current_user.id
@@ -165,8 +165,10 @@ def timetableQuery(response_text, user_Input):
         return timetable
 
     if "week" in response_text_split and "timetable" in response_text_split and "next" in response_text_split:
+        #print("test1")
         user_id = current_user.id
         today = date.today()
+        #print("test2")
         week = getWeekDate(today + timedelta(days=7))
         timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(week))
         return timetable
@@ -186,8 +188,10 @@ def timetableQuery(response_text, user_Input):
         return timetable
 
     if "month" in response_text_split and "timetable" in response_text_split and "next" in response_text_split:
+        #print("test1")
         user_id = current_user.id
         today = date.today()
+        #print("test2")
         mDay = today - timedelta(days=int(today.strftime("%d"))-1)
         mSize = 0
         mCheck = True
@@ -197,14 +201,13 @@ def timetableQuery(response_text, user_Input):
                 mDay = mDay + timedelta(days=1)
             else:
                 mCheck = False
-        print(mSize)
-        print(int(today.strftime("%d")))
+        #print(mSize)
+        #print(int(today.strftime("%d")))
         month = getMonthDate(today + (timedelta(days=mSize)))
         timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(month))
         return timetable
 
     if "month" in response_text_split and "timetable" in response_text_split:
-
         user_id = current_user.id
         today = date.today()
         month = getMonthDate(today)
@@ -214,15 +217,16 @@ def timetableQuery(response_text, user_Input):
     if "timetable" in response_text_split:
         user_id = current_user.id
         dates = Timetable.query.filter_by(id=user_id)
-        date = user_Input_split[-3] + "-" + user_Input_split[-2] + "-" + user_Input_split[-1]
+        Ddate = user_Input_split[-3] + "-" + user_Input_split[-2] + "-" + user_Input_split[-1]
         daysQuery = []
         for day in dates:
-            if day.Date == date:
+            if day.Date == Ddate:
                 daysQuery.append(day.Date)
         timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(daysQuery))
         return timetable
+
     else:
-            return
+        return
 
 
 def calendarQuery(response_text):
