@@ -120,43 +120,106 @@ def sportQuery(response_text, user_Input):
     else:
             return
 
-def getWeekDate():
-    today = date.today()
+def getWeekDate(today):
     startDay = today - timedelta(days=today.weekday())
-    addDay = startDay.strftime("%d/%m/%Y")
+    addDay = startDay.strftime("%Y-%m-%d")
     week = []
     for i in range(7):
         week.append(addDay)
         startDay = startDay + timedelta(days=1)
-        addDay = startDay.strftime("%d/%m/%Y")
+        addDay = startDay.strftime("%Y-%m-%d")
     return(week)
 
+def getMonthDate(today):
+    print(today)
+    startDay = today - timedelta(days=int(today.strftime("%d"))-1)
+    addDay = startDay.strftime("%Y-%m-%d")
+    month = []
+    mDay = startDay
+    mSize = 0
+    mCheck = True
+    while mCheck:
+        if mDay.strftime("%m") == today.strftime("%m"):
+            mSize = mSize + 1
+            mDay = mDay + timedelta(days=1)
+        else:
+            mCheck = False
+    for i in range(mSize):
+        month.append(addDay)
+        startDay = startDay + timedelta(days=1)
+        addDay = startDay.strftime("%Y-%m-%d")
+    return(month)
 
-def timetableQuery(response_text):
+
+def timetableQuery(response_text, user_Input):
     #Damjan prototype
     #testing query for timetable
     response_text_split = response_text.split()
+    user_Input_split = (user_Input.upper()).split()
     
-    if "week" in response_text_split and "timetable" in response_text_split:
-        # print('example table for month...')
-        # f = open("timetable.txt", "r")
-        # for x in f:
-        #     key = x.split()[0]
-        #     timetableDict[key] = x.split()[1]
+    if "week" in response_text_split and "timetable" in response_text_split and "previous" in response_text_split:
         user_id = current_user.id
-        week = getWeekDate()
-        print("s")
-        print(week)
+        today = date.today()
+        week = getWeekDate(today - timedelta(days=7))
         timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(week))
         return timetable
-    elif "month" in response_text_split and "timetable" in response_text_split:
-        # print('example table for week...')
-        # f = open("timetable.txt", "r")
-        # for x in f:
-        #     key = x.split()[0]
-        #     timetableDict[key] = x.split()[1]
+
+    if "week" in response_text_split and "timetable" in response_text_split and "next" in response_text_split:
         user_id = current_user.id
-        timetable = Timetable.query.filter_by(id=user_id)
+        today = date.today()
+        week = getWeekDate(today + timedelta(days=7))
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(week))
+        return timetable
+
+    if "week" in response_text_split and "timetable" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        week = getWeekDate(today)
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(week))
+        return timetable
+
+    if "month" in response_text_split and "timetable" in response_text_split and "previous" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        month = getMonthDate(today - timedelta(days=int(today.strftime("%d"))))
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(month))
+        return timetable
+
+    if "month" in response_text_split and "timetable" in response_text_split and "next" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        mDay = today - timedelta(days=int(today.strftime("%d"))-1)
+        mSize = 0
+        mCheck = True
+        while mCheck:
+            if mDay.strftime("%m") == today.strftime("%m"):
+                mSize = mSize + 1
+                mDay = mDay + timedelta(days=1)
+            else:
+                mCheck = False
+        print(mSize)
+        print(int(today.strftime("%d")))
+        month = getMonthDate(today + (timedelta(days=mSize)))
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(month))
+        return timetable
+
+    if "month" in response_text_split and "timetable" in response_text_split:
+
+        user_id = current_user.id
+        today = date.today()
+        month = getMonthDate(today)
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(month))
+        return timetable
+
+    if "timetable" in response_text_split:
+        user_id = current_user.id
+        dates = Timetable.query.filter_by(id=user_id)
+        date = user_Input_split[-3] + "-" + user_Input_split[-2] + "-" + user_Input_split[-1]
+        daysQuery = []
+        for day in dates:
+            if day.Date == date:
+                daysQuery.append(day.Date)
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(daysQuery))
         return timetable
     else:
             return
@@ -166,7 +229,7 @@ def calendarQuery(response_text):
     response_text_split = response_text.split()
     if "event" in response_text_split:
         user_id = current_user.id
-        event = Calendar(date="sdf",time="sdf",reminder="sdf",type="sdf")
+        event = Calendar(id=user_id,Date="sdf",Time="sdf",Reminder="sdf",Type="sdf")
         db.session.add(event)
         db.session.commit()
         return
@@ -209,7 +272,6 @@ def calendar_deleteQuery(response_text):
         return
 
 
-#@app.route("/")
 @app.route('/query', methods=['GET', 'POST'])
 def send_query():
         if current_user.is_authenticated:
@@ -226,7 +288,7 @@ def send_query():
                     userInput = "Student:  " + userInput
                     response_text = "Cymro:  " + fulfillment_text
                     grades = gradeQuery(response_text, userInput)
-                    timetable = timetableQuery(response_text)
+                    timetable = timetableQuery(response_text, userInput)
                     sports = sportQuery(response_text, userInput)
                     calendar = calendarQuery(response_text)
 
