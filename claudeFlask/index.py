@@ -339,11 +339,18 @@ def send_query():
                     fulfillment_text = detect_intent_texts(project_id, "unique", userInput, 'en')
                     userInput = "Student:  " + userInput
                     response_text = "Cymro:  " + fulfillment_text
-                    grades = gradeQuery(response_text, userInput)
-                    timetable = timetableQuery(response_text, userInput)
-                    sports = sportQuery(response_text, userInput)
-                    #calendar = calendarQuery(response_text)
-                    calendar = show_calendarQuery(response_text, userInput)
+                    help_message = userInput.split()
+                    if "help" not in help_message:
+                        grades = gradeQuery(response_text, userInput)
+                        timetable = timetableQuery(response_text, userInput)
+                        sports = sportQuery(response_text, userInput)
+                        #calendar = calendarQuery(response_text)
+                        calendar = show_calendarQuery(response_text, userInput)
+                    else:
+                        grades = []
+                        timetable = []
+                        sports = []
+                        calendar = []
 
 
 
