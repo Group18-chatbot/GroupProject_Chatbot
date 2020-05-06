@@ -91,13 +91,11 @@
                             <th> <b>Date</b> </th>
                             <th> <b>Time</b> </th>
                             <th> <b>Reminder</b> </th>
-                            <th> <b>Type</b> </th>
                             {% for item in calendar %}
                                 <tr>
                                     <td> {{ item.Date }} </td>
                                     <td> {{ item.Time }} </td>
                                     <td> {{ item.Reminder }} </td>
-                                    <td> {{ item.Type }} </td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -105,7 +103,7 @@
                 {%else%}
                     </br>
                     </br>
-                    <b>Calender is empty</b>
+                    <b>Calendar is empty</b>
                 {%endif%}
             {%endif%}
 

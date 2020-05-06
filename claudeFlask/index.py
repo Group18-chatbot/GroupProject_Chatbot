@@ -233,47 +233,117 @@ def calendarQuery(response_text):
     response_text_split = response_text.split()
     if "event" in response_text_split:
         user_id = current_user.id
-        event = Calendar(id=user_id,Date="sdf",Time="sdf",Reminder="sdf",Type="sdf")
-        db.session.add(event)
+        evento = Calendar(id=8 ,Date="2020-06-05",Time="12:10-14:00",Reminder="elrtdgfs")
+        db.session.add(evento)
         db.session.commit()
         return
     else:
         return
-
-#def calendar_addQuery(response_text):
-#    response_text_split = response_text.split()
-#
- #   mydb = mysql.connector.connect(
- #   host="csmysql.cs.cf.ac.uk",
- #   user="CM2305.group18.1920",
- #   passwd="Mw2Z4DeYMm62fPG",
-  #  database="CM2305_group18_1920"
-  #  )
-  #  mycursor = mydb.cursor()
- #   if "event" in response_text_split:
-  #      sql = "INSERT INTO calendar (id, Date, Time, Reminder, Type) VALUES (%s, %s,%s, %s)"
-  #      val = (7,"John", "Highway 21","John", "Highway 21")
-  #      mycursor.execute(sql, val)
-  #      mydb.commit()
-   #     return
-   # else:
-   #     return
-    
-
-
-
-
-
 def calendar_deleteQuery(response_text):
     response_text_split = response_text.split()
     if "delete" in response_text_split:
         user_id = current_user.id
-        event = Calendar(date='sdf',time='sdf',reminder='sdf',type='sdf')
+        event = Calendar(Date='sdEWf',Time='sWEdf',Reminder='s')
         db.session.add(event)
         db.session.commit()
         return event
     else:
         return
+
+def show_calendarQuery(response_text, user_Input):
+    response_text_split = response_text.split()
+    user_Input_split = user_Input.split()
+    
+    if "week" in response_text_split and "calendar" in response_text_split and "previous" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        week = getWeekDate(today - timedelta(days=7))
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(week))
+        return calendar
+
+    if "week" in response_text_split and "calendar" in response_text_split and "next" in response_text_split:
+        #print("test1")
+        user_id = current_user.id
+        today = date.today()
+        #print("test2")
+        week = getWeekDate(today + timedelta(days=7))
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(week))
+        return calendar
+
+    if "week" in response_text_split and "calendar" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        week = getWeekDate(today)
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(week))
+        return calendar
+
+    if "month" in response_text_split and "calendar" in response_text_split and "previous" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        month = getMonthDate(today - timedelta(days=int(today.strftime("%d"))))
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(month))
+        return calendar
+
+    if "month" in response_text_split and "calendar" in response_text_split and "next" in response_text_split:
+        #print("test1")
+        user_id = current_user.id
+        today = date.today()
+        #print("test2")
+        mDay = today - timedelta(days=int(today.strftime("%d"))-1)
+        mSize = 0
+        mCheck = True
+        while mCheck:
+            if mDay.strftime("%m") == today.strftime("%m"):
+                mSize = mSize + 1
+                mDay = mDay + timedelta(days=1)
+            else:
+                mCheck = False
+        #print(mSize)
+        #print(int(today.strftime("%d")))
+        month = getMonthDate(today + (timedelta(days=mSize)))
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(month))
+        return calendar
+
+    if "month" in response_text_split and "calendar" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        month = getMonthDate(today)
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(month))
+        return calendar
+
+    if "calendar" in response_text_split:
+        user_id = current_user.id
+        dates = Calendar.query.filter_by(id=user_id)
+        Ddate = user_Input_split[-3] + "-" + user_Input_split[-2] + "-" + user_Input_split[-1]
+        daysQuery = []
+        for day in dates:
+            if day.Date == Ddate:
+                daysQuery.append(day.Date)
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(daysQuery))
+        return calendar
+
+    if "schedule" in response_text_split:
+        user_id = current_user.id
+        date1= user_Input_split[-6] + "-" + user_Input_split[-5] + "-" + user_Input_split[-4]
+        time1=user_Input_split[-2]+ ":" + user_Input_split[-1] 
+        event1=user_Input_split[-9] + " " + user_Input_split[-8] 
+        evento = Calendar(id=user_id ,Date=date1,Time=time1,Reminder=event1)
+        db.session.add(evento)
+        db.session.commit()
+        return
+
+    if "delete" in response_text_split:
+        user_id = current_user.id
+        time2=user_Input_split[-2]+ ":" + user_Input_split[-1] 
+        Calendar.query.filter_by(Time=time2).delete()
+        db.session.commit()
+        return
+
+    else:
+        return
+
+
+
 
 
 @app.route('/query', methods=['GET', 'POST'])
@@ -294,12 +364,13 @@ def send_query():
                     grades = gradeQuery(response_text, userInput)
                     timetable = timetableQuery(response_text, userInput)
                     sports = sportQuery(response_text, userInput)
-                    calendar = calendarQuery(response_text)
+                    #calendar = calendarQuery(response_text)
+                    calendar = show_calendarQuery(response_text, userInput)
 
 
 
 
-                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable = timetable, sports=sports)
+                    return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable = timetable, sports=sports, calendar=calendar)
             except:
                 return render_template('index.html', form=form)
         else:

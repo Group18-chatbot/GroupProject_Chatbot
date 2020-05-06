@@ -58,4 +58,3 @@ class Calendar(db.Model):
     Date = db.Column(db.String(100), primary_key=True)
     Time = db.Column(db.String(100), primary_key=True)
     Reminder = db.Column(db.String(100),nullable=False)
-    Type = db.Column(db.String(50),nullable=False)

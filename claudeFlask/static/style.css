@@ -293,3 +293,9 @@ input[type=text]:placeholder, input[type="password"]:placeholder {
 	border: 1px solid black;
 	background-color:#c1e2ff;
  }
+ .calendar table{
+    border-collapse: collapse;
+    margin: 0 auto;
+  border: 1px solid black;
+  background-color:#c1e2ff;
+ }
