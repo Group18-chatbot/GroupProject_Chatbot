@@ -229,27 +229,6 @@ def timetableQuery(response_text, user_Input):
         return
 
 
-def calendarQuery(response_text):
-    response_text_split = response_text.split()
-    if "event" in response_text_split:
-        user_id = current_user.id
-        evento = Calendar(id=8 ,Date="2020-06-05",Time="12:10-14:00",Reminder="elrtdgfs")
-        db.session.add(evento)
-        db.session.commit()
-        return
-    else:
-        return
-def calendar_deleteQuery(response_text):
-    response_text_split = response_text.split()
-    if "delete" in response_text_split:
-        user_id = current_user.id
-        event = Calendar(Date='sdEWf',Time='sWEdf',Reminder='s')
-        db.session.add(event)
-        db.session.commit()
-        return event
-    else:
-        return
-
 def show_calendarQuery(response_text, user_Input):
     response_text_split = response_text.split()
     user_Input_split = user_Input.split()
@@ -322,7 +301,7 @@ def show_calendarQuery(response_text, user_Input):
         calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(daysQuery))
         return calendar
 
-    if "schedule" in response_text_split:
+    if "schedule" in user_Input:
         user_id = current_user.id
         date1= user_Input_split[-6] + "-" + user_Input_split[-5] + "-" + user_Input_split[-4]
         time1=user_Input_split[-2]+ ":" + user_Input_split[-1] 
@@ -332,13 +311,12 @@ def show_calendarQuery(response_text, user_Input):
         db.session.commit()
         return
 
-    if "delete" in response_text_split:
+    if "delete" in user_Input:
         user_id = current_user.id
         time2=user_Input_split[-2]+ ":" + user_Input_split[-1] 
-        Calendar.query.filter_by(Time=time2).delete()
+        date2=user_Input_split[-6] + "-" + user_Input_split[-5] + "-" + user_Input_split[-4]
+        Calendar.query.filter_by(Date=date2, Time=time2).delete()
         db.session.commit()
-        return
-
     else:
         return
 
