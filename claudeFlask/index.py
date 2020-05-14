@@ -214,6 +214,33 @@ def timetableQuery(response_text, user_Input):
         timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(month))
         return timetable
 
+    if "yesterday" in response_text_split and "timetable" in response_text_split:
+        user_id = current_user.id
+        today = date.today() - timedelta(days=1)
+        pday = today.strftime("%Y-%m-%d")
+        pmonth = []
+        pmonth.append(pday)
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(pmonth))
+        return timetable
+
+    if "today" in response_text_split and "timetable" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        pday = today.strftime("%Y-%m-%d")
+        pmonth = []
+        pmonth.append(pday)
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(pmonth))
+        return timetable
+
+    if "tomorrow" in response_text_split and "timetable" in response_text_split:
+        user_id = current_user.id
+        today = date.today() + timedelta(days=1)
+        pday = today.strftime("%Y-%m-%d")
+        pmonth = []
+        pmonth.append(pday)
+        timetable = Timetable.query.filter_by(id=user_id).filter(Timetable.Date.in_(pmonth))
+        return timetable
+
     if "timetable" in response_text_split:
         user_id = current_user.id
         dates = Timetable.query.filter_by(id=user_id)
@@ -290,6 +317,33 @@ def show_calendarQuery(response_text, user_Input):
         calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(month))
         return calendar
 
+    if "yesterday" in response_text_split and "calendar" in response_text_split:
+        user_id = current_user.id
+        today = date.today() - timedelta(days=1)
+        pday = today.strftime("%Y-%m-%d")
+        pmonth = []
+        pmonth.append(pday)
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(pmonth))
+        return calendar
+
+    if "today" in response_text_split and "calendar" in response_text_split:
+        user_id = current_user.id
+        today = date.today()
+        pday = today.strftime("%Y-%m-%d")
+        pmonth = []
+        pmonth.append(pday)
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(pmonth))
+        return calendar
+
+    if "tomorrow" in response_text_split and "calendar" in response_text_split:
+        user_id = current_user.id
+        today = date.today() + timedelta(days=1)
+        pday = today.strftime("%Y-%m-%d")
+        pmonth = []
+        pmonth.append(pday)
+        calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(pmonth))
+        return calendar
+
     if "calendar" in response_text_split:
         user_id = current_user.id
         dates = Calendar.query.filter_by(id=user_id)
@@ -301,7 +355,7 @@ def show_calendarQuery(response_text, user_Input):
         calendar = Calendar.query.filter_by(id=user_id).filter(Calendar.Date.in_(daysQuery))
         return calendar
 
-    if "schedule" in user_Input:
+    if "Schedule" in user_Input:
         user_id = current_user.id
         date1= user_Input_split[-6] + "-" + user_Input_split[-5] + "-" + user_Input_split[-4]
         time1=user_Input_split[-2]+ ":" + user_Input_split[-1] 
@@ -311,7 +365,7 @@ def show_calendarQuery(response_text, user_Input):
         db.session.commit()
         return
 
-    if "delete" in user_Input:
+    if "Delete" in user_Input:
         user_id = current_user.id
         time2=user_Input_split[-2]+ ":" + user_Input_split[-1] 
         date2=user_Input_split[-6] + "-" + user_Input_split[-5] + "-" + user_Input_split[-4]
@@ -351,8 +405,6 @@ def send_query():
                         timetable = []
                         sports = []
                         calendar = []
-
-
 
 
                     return render_template('index.html', response_text=response_text, userInput=userInput, form=form, grades=grades, timetable = timetable, sports=sports, calendar=calendar)

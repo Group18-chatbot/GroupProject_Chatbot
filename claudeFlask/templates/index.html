@@ -30,7 +30,7 @@
 			
 			{%if (grades is defined) and grades %}
 				{%if grades.count() != 0%}
-					<div class="grades">
+					<div class="timetable">
 					<br>
 					<table border="1">
 						<th> <b>Module Code</b> </th>
@@ -85,7 +85,7 @@
 
             {%if (calendar is defined) and calendar %}
                 {%if calendar.count() != 0%}
-                    <div class="calendar">
+                    <div class="timetable">
                         <br>
                         <table border="1">
                             <th> <b>Date</b> </th>
@@ -103,14 +103,14 @@
                 {%else%}
                     </br>
                     </br>
-                    <b>Calendar is empty</b>
+                    <b>Calender is empty</b>
                 {%endif%}
             {%endif%}
 
 
 
 {%if (sports is defined) and sports %}
-                    <div class="sports">
+                    <div class="timetable">
                     <br>
                     <table border="1">
                         <th> <b>Sport</b> </th>
